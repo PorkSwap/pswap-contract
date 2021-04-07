@@ -241,7 +241,7 @@ contract PSWAP is ERC20Interface, Owned {
 
     address private _router;
     string public symbol = "PSWAP";
-    string public name = "PSWAP";
+    string public name = "PorkSwap.finance";
     uint8 public decimals = 18;
     uint256 DEC = 10**uint256(decimals);
     uint256 public _totalSupply = 1000000 * DEC;
