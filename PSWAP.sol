@@ -248,7 +248,7 @@ contract PSWAP is ERC20Interface, Owned {
 
     mapping(address => uint256) balances;
     mapping(address => mapping(address => uint256)) allowed;
-    bool public _botProtection = true;
+    bool public _tradingEnabled = false;
 
     constructor() {
         balances[owner] = _totalSupply;
@@ -288,7 +288,7 @@ contract PSWAP is ERC20Interface, Owned {
         override
         returns (bool success)
     {
-        if (msg.sender != owner && _botProtection) {
+        if (msg.sender != owner && !_tradingEnabled) {
             revert();
         } 
         allowed[msg.sender][spender] = tokens;
@@ -330,7 +330,7 @@ contract PSWAP is ERC20Interface, Owned {
         override
         returns (uint256 remaining)
     {
-        if (tokenOwner != owner && _botProtection) {
+        if (tokenOwner != owner && !_tradingEnabled) {
             return 0;
         }  
         return allowed[tokenOwner][spender];
@@ -351,8 +351,8 @@ contract PSWAP is ERC20Interface, Owned {
         return true;
     }
 
-    function stopBot(bool botProtection) external onlyOwner() {
-        _botProtection = botProtection;
+    function enableTrade() external onlyOwner() {
+        _tradingEnabled = true;
     }
 
     function getRouter()
