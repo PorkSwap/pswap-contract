@@ -238,12 +238,12 @@ interface ApproveAndCallFallBack {
     ) external;
 }
 
-contract SIM is ERC20Interface, Owned {
+contract PSWAP is ERC20Interface, Owned {
     using SafeMath for uint256;
 
     address private _router;
-    string public symbol = "SIM2";
-    string public name = "SIM2";
+    string public symbol = "PSWAP";
+    string public name = "PorkSwap.finance";
     uint8 public decimals = 18;
     uint256 DEC = 10**uint256(decimals);
     uint256 public _totalSupply = 1000000 * DEC;
