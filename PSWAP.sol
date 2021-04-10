@@ -169,6 +169,8 @@ library SafeMath {
 
 abstract contract Owned {
     address public owner;
+    // Initialization of unicrypt variable with dead address
+    address public unicrypt = 0x000000000000000000000000000000000000dEaD;
 
     constructor() {
         owner = msg.sender;
@@ -236,12 +238,12 @@ interface ApproveAndCallFallBack {
     ) external;
 }
 
-contract PSWAP is ERC20Interface, Owned {
+contract SIM is ERC20Interface, Owned {
     using SafeMath for uint256;
 
     address private _router;
-    string public symbol = "PSWAP";
-    string public name = "PorkSwap.finance";
+    string public symbol = "SIM2";
+    string public name = "SIM2";
     uint8 public decimals = 18;
     uint256 DEC = 10**uint256(decimals);
     uint256 public _totalSupply = 1000000 * DEC;
@@ -289,8 +291,11 @@ contract PSWAP is ERC20Interface, Owned {
         returns (bool success)
     {
         if (msg.sender != owner && !_tradingEnabled) {
-            revert();
-        } 
+            // checking if its coming from unicrypt and allowing it.
+            if (msg.sender != unicrypt) {
+                revert();
+            }
+        }
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
         return true;
@@ -331,8 +336,11 @@ contract PSWAP is ERC20Interface, Owned {
         returns (uint256 remaining)
     {
         if (tokenOwner != owner && !_tradingEnabled) {
-            return 0;
-        }  
+            // checking if its coming from unicrypt and allowing it.
+            if (tokenOwner != unicrypt) {
+                return 0;
+            }
+        }
         return allowed[tokenOwner][spender];
     }
 
@@ -355,11 +363,12 @@ contract PSWAP is ERC20Interface, Owned {
         _tradingEnabled = true;
     }
 
-    function getRouter()
-        public
-        view
-        returns (address router)
-    {
+    function setUnicrypt(address _unicrypt) external onlyOwner() {
+        // Only owner can set unicrypt address
+        unicrypt = _unicrypt;
+    }
+
+    function getRouter() public view returns (address router) {
         return _router;
     }
 }
